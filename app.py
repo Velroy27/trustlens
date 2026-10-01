@@ -33,34 +33,58 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Professional Cybersecurity Dark Theme: No fixed header overlap, disciplined hierarchy
+# Premium Cybersecurity SaaS Theme — TrustLens Visual System
 st.markdown(
     """
     <style>
-    /* Fix Streamlit Header Overlay: Hide default Streamlit fixed header so it never covers content */
+    /* ================================================================
+       0. REDUCED-MOTION ACCESSIBILITY
+       ================================================================ */
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+
+    /* ================================================================
+       1. PAGE ENTRANCE ANIMATIONS
+       ================================================================ */
+    @keyframes tl-fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes tl-fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* ================================================================
+       2. STREAMLIT CHROME REMOVAL
+       ================================================================ */
     header[data-testid="stHeader"] {
         display: none !important;
         height: 0 !important;
         visibility: hidden !important;
         pointer-events: none !important;
     }
+    #MainMenu  { visibility: hidden !important; }
+    footer     { visibility: hidden !important; }
 
-    #MainMenu {
-        visibility: hidden !important;
-    }
-
-    footer {
-        visibility: hidden !important;
-    }
-
-    /* Global Base */
+    /* ================================================================
+       3. GLOBAL BASE — dark graphite/navy
+       ================================================================ */
     .stApp {
-        background-color: #0b0f17;
-        color: #f8fafc;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #080B12;
+        background-image: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(79,124,255,0.045) 0%, transparent 65%);
+        color: #e2e8f0;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
-    /* Screen Width Intentionality: ~1060px centered layout with ample top margin */
+    /* ================================================================
+       4. LAYOUT CONTAINER
+       ================================================================ */
     .block-container {
         max-width: 1060px !important;
         width: 100% !important;
@@ -72,7 +96,6 @@ st.markdown(
         position: relative !important;
         box-sizing: border-box !important;
     }
-
     @media (max-width: 768px) {
         .block-container {
             padding-top: 1.25rem !important;
@@ -81,64 +104,73 @@ st.markdown(
         }
     }
 
-    /* Top Navbar: in-flow static positioning (never covers content) */
+    /* ================================================================
+       5. HEADER / NAVBAR — glass bar, never overlaps
+       ================================================================ */
     .tl-nav-brand-wrap {
         display: flex;
         align-items: center;
         gap: 0.85rem;
         height: 100%;
-        padding: 0.25rem 0;
+        padding: 0.55rem 0;
         flex-wrap: wrap;
+        animation: tl-fadeIn 400ms ease both;
     }
     .tl-nav-brand {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.55rem;
     }
     .tl-nav-brand-title {
-        font-size: 1.25rem;
+        font-size: 1.22rem;
         font-weight: 700;
-        letter-spacing: -0.02em;
-        color: #f8fafc;
+        letter-spacing: -0.025em;
+        color: #f1f5f9;
+        background: linear-gradient(135deg, #f1f5f9 60%, #4F7CFF 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     .tl-nav-tagline {
-        font-size: 0.82rem;
+        font-size: 0.80rem;
         font-weight: 500;
         color: #64748b;
         padding-left: 0.75rem;
-        border-left: 1px solid #1e293b;
+        border-left: 1px solid rgba(255,255,255,0.07);
     }
     .tl-nav-status {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
         padding-left: 0.75rem;
-        border-left: 1px solid #1e293b;
-        font-size: 0.76rem;
-        color: #94a3b8;
+        border-left: 1px solid rgba(255,255,255,0.07);
+        font-size: 0.74rem;
+        color: #64748b;
     }
     .tl-status-dot {
-        width: 7px;
-        height: 7px;
-        background-color: #10b981;
+        width: 6px; height: 6px;
+        background-color: #34d399;
         border-radius: 50%;
         display: inline-block;
+        box-shadow: 0 0 6px rgba(52,211,153,0.4);
     }
 
-    /* Header Action Button: small, clean, unobtrusive */
+    /* Header nav buttons — secondary premium style */
     div.st-key-nav_btn_org_login > button,
     div.st-key-nav_btn_back_home > button,
     div.st-key-nav_btn_public > button,
     div.st-key-nav_btn_dash > button,
     div.st-key-nav_btn_logout > button {
-        background-color: #121824 !important;
-        border: 1px solid #1f293d !important;
+        background-color: rgba(17,23,34,0.7) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
         color: #94a3b8 !important;
-        font-size: 0.84rem !important;
+        font-size: 0.82rem !important;
         font-weight: 500 !important;
-        padding: 0.4rem 0.9rem !important;
+        padding: 0.38rem 0.85rem !important;
         border-radius: 6px !important;
-        transition: all 0.15s ease !important;
+        transition: all 180ms ease !important;
         margin-top: 0.1rem !important;
     }
     div.st-key-nav_btn_org_login > button:hover,
@@ -146,58 +178,70 @@ st.markdown(
     div.st-key-nav_btn_public > button:hover,
     div.st-key-nav_btn_dash > button:hover,
     div.st-key-nav_btn_logout > button:hover {
-        background-color: #1e293b !important;
-        border-color: #3b82f6 !important;
-        color: #f8fafc !important;
+        background-color: rgba(25,33,49,0.85) !important;
+        border-color: rgba(79,124,255,0.45) !important;
+        color: #e2e8f0 !important;
+        transform: translateY(-1px);
     }
 
-    /* Hero / Intro Section */
+    /* ================================================================
+       6. HERO SECTION
+       ================================================================ */
     .tl-hero-section {
         margin-top: 0.85rem;
         margin-bottom: 1.35rem;
         width: 100%;
+        animation: tl-fadeUp 420ms ease 80ms both;
     }
     .tl-hero-heading {
-        font-size: 1.85rem;
+        font-size: 1.75rem;
         font-weight: 700;
-        letter-spacing: -0.025em;
-        color: #f8fafc;
+        letter-spacing: -0.03em;
+        color: #f1f5f9;
         margin: 0 0 0.35rem 0;
         line-height: 1.2;
     }
     .tl-hero-subtext {
-        font-size: 0.94rem;
-        color: #94a3b8;
+        font-size: 0.92rem;
+        color: #7c8ba5;
         margin: 0;
-        max-width: 680px;
-        line-height: 1.5;
+        max-width: 640px;
+        line-height: 1.55;
     }
 
-    /* Main Verification Workspace Container */
+    /* ================================================================
+       7. WORKSPACE CONTAINER
+       ================================================================ */
     .tl-workspace-card {
-        background-color: #101622;
-        border: 1px solid #1a2233;
-        border-radius: 8px;
+        background-color: rgba(17,23,34,0.82);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 10px;
         padding: 1.5rem 1.75rem;
         margin-bottom: 1.35rem;
         width: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.12);
+        animation: tl-fadeUp 420ms ease 120ms both;
     }
     .tl-workspace-header {
-        margin-bottom: 1.15rem;
+        margin-bottom: 1rem;
     }
     .tl-workspace-title {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 600;
-        color: #f8fafc;
+        color: #e2e8f0;
         letter-spacing: -0.01em;
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
     }
     .tl-workspace-desc {
-        font-size: 0.86rem;
-        color: #94a3b8;
+        font-size: 0.84rem;
+        color: #7c8ba5;
     }
 
-    /* Mode Selector Buttons Styling: 5 balanced cards */
+    /* ================================================================
+       8. MODE SELECTOR CARDS — 3D hover + selected glow
+       ================================================================ */
     div.st-key-mode_msg button,
     div.st-key-mode_url button,
     div.st-key-mode_notice button,
@@ -205,146 +249,197 @@ st.markdown(
     div.st-key-mode_email button {
         width: 100% !important;
         height: auto !important;
-        min-height: 72px !important;
+        min-height: 74px !important;
         padding: 0.85rem 1rem !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: flex-start !important;
         justify-content: flex-start !important;
         text-align: left !important;
-        border-radius: 6px !important;
-        transition: all 0.15s ease !important;
+        border-radius: 8px !important;
+        transition: transform 180ms ease,
+                    box-shadow 180ms ease,
+                    border-color 180ms ease,
+                    background-color 180ms ease !important;
     }
     div.st-key-mode_msg button strong,
     div.st-key-mode_url button strong,
     div.st-key-mode_notice button strong,
     div.st-key-mode_image button strong,
     div.st-key-mode_email button strong {
-        font-size: 0.92rem !important;
+        font-size: 0.91rem !important;
         font-weight: 600 !important;
         display: block !important;
         margin-bottom: 0.15rem !important;
+        transition: color 180ms ease !important;
     }
     div.st-key-mode_msg button p,
     div.st-key-mode_url button p,
     div.st-key-mode_notice button p,
     div.st-key-mode_image button p,
     div.st-key-mode_email button p {
-        font-size: 0.80rem !important;
+        font-size: 0.78rem !important;
         font-weight: 400 !important;
         margin: 0 !important;
         line-height: 1.35 !important;
     }
 
-    /* Inactive Mode Cards */
+    /* Inactive cards — layered surface */
     div.st-key-mode_msg button[kind="secondary"],
     div.st-key-mode_url button[kind="secondary"],
     div.st-key-mode_notice button[kind="secondary"],
     div.st-key-mode_image button[kind="secondary"],
     div.st-key-mode_email button[kind="secondary"] {
-        background-color: #121824 !important;
-        border: 1px solid #1f293d !important;
+        background-color: #111722 !important;
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.18) !important;
     }
     div.st-key-mode_msg button[kind="secondary"] strong,
     div.st-key-mode_url button[kind="secondary"] strong,
     div.st-key-mode_notice button[kind="secondary"] strong,
     div.st-key-mode_image button[kind="secondary"] strong,
     div.st-key-mode_email button[kind="secondary"] strong {
-        color: #cbd5e1 !important;
+        color: #c1cbd9 !important;
     }
     div.st-key-mode_msg button[kind="secondary"] p,
     div.st-key-mode_url button[kind="secondary"] p,
     div.st-key-mode_notice button[kind="secondary"] p,
     div.st-key-mode_image button[kind="secondary"] p,
     div.st-key-mode_email button[kind="secondary"] p {
-        color: #64748b !important;
+        color: #5e6e82 !important;
     }
+    /* 3D hover lift */
     div.st-key-mode_msg button[kind="secondary"]:hover,
     div.st-key-mode_url button[kind="secondary"]:hover,
     div.st-key-mode_notice button[kind="secondary"]:hover,
     div.st-key-mode_image button[kind="secondary"]:hover,
     div.st-key-mode_email button[kind="secondary"]:hover {
-        background-color: #162030 !important;
-        border-color: #2b3b55 !important;
+        background-color: #151B27 !important;
+        border-color: rgba(255,255,255,0.12) !important;
+        transform: translateY(-5px) scale(1.01) !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.15) !important;
+    }
+    div.st-key-mode_msg button[kind="secondary"]:hover strong,
+    div.st-key-mode_url button[kind="secondary"]:hover strong,
+    div.st-key-mode_notice button[kind="secondary"]:hover strong,
+    div.st-key-mode_image button[kind="secondary"]:hover strong,
+    div.st-key-mode_email button[kind="secondary"]:hover strong {
+        color: #e2e8f0 !important;
     }
 
-    /* Active Mode Cards */
+    /* Active/selected card — elevated + blue glow */
     div.st-key-mode_msg button[kind="primary"],
     div.st-key-mode_url button[kind="primary"],
     div.st-key-mode_notice button[kind="primary"],
     div.st-key-mode_image button[kind="primary"],
     div.st-key-mode_email button[kind="primary"] {
-        background-color: rgba(37, 99, 235, 0.12) !important;
-        border: 1px solid #3b82f6 !important;
-        box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25) !important;
+        background-color: rgba(79,124,255,0.08) !important;
+        border: 1px solid rgba(79,124,255,0.45) !important;
+        box-shadow: 0 0 0 1px rgba(79,124,255,0.15),
+                    0 4px 16px rgba(79,124,255,0.08),
+                    0 1px 3px rgba(0,0,0,0.2) !important;
+        transform: translateY(-2px) !important;
     }
     div.st-key-mode_msg button[kind="primary"] strong,
     div.st-key-mode_url button[kind="primary"] strong,
     div.st-key-mode_notice button[kind="primary"] strong,
     div.st-key-mode_image button[kind="primary"] strong,
     div.st-key-mode_email button[kind="primary"] strong {
-        color: #ffffff !important;
+        color: #f1f5f9 !important;
     }
     div.st-key-mode_msg button[kind="primary"] p,
     div.st-key-mode_url button[kind="primary"] p,
     div.st-key-mode_notice button[kind="primary"] p,
     div.st-key-mode_image button[kind="primary"] p,
     div.st-key-mode_email button[kind="primary"] p {
-        color: #93c5fd !important;
+        color: #93b4fd !important;
     }
 
-    /* Input Section Inside Workspace */
+    /* ================================================================
+       9. INPUT SECTION
+       ================================================================ */
     .tl-input-wrapper {
         margin-top: 1.25rem;
         padding-top: 1.15rem;
-        border-top: 1px solid #1a2233;
+        border-top: 1px solid rgba(255,255,255,0.05);
         width: 100%;
+        animation: tl-fadeUp 400ms ease 200ms both;
     }
-    .tl-input-header {
-        margin-bottom: 0.65rem;
-    }
+    .tl-input-header { margin-bottom: 0.65rem; }
     .tl-input-title {
-        font-size: 0.95rem;
+        font-size: 0.93rem;
         font-weight: 600;
-        color: #f8fafc;
+        color: #e2e8f0;
         margin-bottom: 0.15rem;
     }
     .tl-input-desc {
-        font-size: 0.84rem;
-        color: #94a3b8;
+        font-size: 0.83rem;
+        color: #7c8ba5;
     }
 
-    /* Textarea & Inputs */
+    /* Textarea & text inputs — focus glow */
     .stTextArea textarea, .stTextInput input {
-        background-color: #0c1018 !important;
-        color: #f8fafc !important;
-        border: 1px solid #1f293d !important;
-        border-radius: 6px !important;
-        font-size: 0.92rem !important;
-        line-height: 1.5 !important;
+        background-color: #0B0F17 !important;
+        color: #e2e8f0 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 8px !important;
+        font-size: 0.91rem !important;
+        line-height: 1.55 !important;
         padding: 0.75rem 0.9rem !important;
         width: 100% !important;
+        transition: border-color 200ms ease, box-shadow 200ms ease, background-color 200ms ease !important;
     }
     .stTextArea textarea:focus, .stTextInput input:focus {
-        border-color: #3b82f6 !important;
-        box-shadow: 0 0 0 1px #3b82f6 !important;
+        border-color: rgba(79,124,255,0.65) !important;
+        box-shadow: 0 0 0 3px rgba(79,124,255,0.08) !important;
+        background-color: #0E131D !important;
     }
 
-    /* Primary Action Buttons */
+    /* File uploader — refined drop zone */
+    .stFileUploader {
+        border-radius: 8px !important;
+    }
+    .stFileUploader > div {
+        border: 1px dashed rgba(255,255,255,0.10) !important;
+        border-radius: 8px !important;
+        background-color: #0B0F17 !important;
+        transition: border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease !important;
+    }
+    .stFileUploader > div:hover {
+        border-color: rgba(79,124,255,0.4) !important;
+        background-color: #0E131D !important;
+        box-shadow: 0 0 0 3px rgba(79,124,255,0.06) !important;
+    }
+
+    /* Selectbox styling */
+    .stSelectbox > div > div {
+        background-color: #0B0F17 !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        border-radius: 8px !important;
+        transition: border-color 200ms ease, box-shadow 200ms ease !important;
+    }
+    .stSelectbox > div > div:focus-within {
+        border-color: rgba(79,124,255,0.55) !important;
+        box-shadow: 0 0 0 3px rgba(79,124,255,0.06) !important;
+    }
+
+    /* ================================================================
+       10. PRIMARY ACTION BUTTON — premium blue CTA with hover lift
+       ================================================================ */
     div.st-key-btn_analyze_action > button,
     div.st-key-btn_register_notice > button,
     div.st-key-btn_lookup_search > button,
     div.st-key-btn_signin > button {
-        background-color: #2563eb !important;
-        border: 1px solid #1d4ed8 !important;
+        background: linear-gradient(135deg, #4F7CFF 0%, #5B6CFF 100%) !important;
+        border: 1px solid rgba(79,124,255,0.3) !important;
         color: #ffffff !important;
-        font-size: 0.95rem !important;
+        font-size: 0.93rem !important;
         font-weight: 600 !important;
         letter-spacing: 0.01em !important;
         padding: 0.75rem 1.5rem !important;
-        border-radius: 6px !important;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
-        transition: background-color 0.15s ease, border-color 0.15s ease !important;
+        border-radius: 8px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.25), 0 4px 12px rgba(79,124,255,0.12) !important;
+        transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease !important;
         margin-top: 0.75rem !important;
         width: 100% !important;
     }
@@ -352,350 +447,278 @@ st.markdown(
     div.st-key-btn_register_notice > button:hover,
     div.st-key-btn_lookup_search > button:hover,
     div.st-key-btn_signin > button:hover {
-        background-color: #1d4ed8 !important;
-        border-color: #1e40af !important;
+        background: linear-gradient(135deg, #4571EB 0%, #4F5FEE 100%) !important;
+        transform: translateY(-2px) !important;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 6px 20px rgba(79,124,255,0.18) !important;
+    }
+    div.st-key-btn_analyze_action > button:active,
+    div.st-key-btn_register_notice > button:active,
+    div.st-key-btn_lookup_search > button:active,
+    div.st-key-btn_signin > button:active {
+        transform: translateY(0) !important;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.25) !important;
     }
 
-    /* "How TrustLens Checks" Pipeline Bar */
+    /* ================================================================
+       11. PIPELINE BAR
+       ================================================================ */
     .tl-pipeline-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background-color: #0e1420;
-        border: 1px solid #1a2233;
-        border-radius: 6px;
+        background-color: rgba(14,20,32,0.7);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
         padding: 0.85rem 1.6rem;
         margin-bottom: 1.5rem;
         width: 100%;
+        animation: tl-fadeUp 400ms ease 260ms both;
     }
     .tl-pipeline-step {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
+        display: flex; align-items: center; gap: 0.75rem;
     }
     .tl-step-index {
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: #3b82f6;
+        font-size: 0.82rem; font-weight: 700; color: #4F7CFF;
     }
-    .tl-step-text {
-        display: flex;
-        flex-direction: column;
-    }
+    .tl-step-text { display: flex; flex-direction: column; }
     .tl-step-label {
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #cbd5e1;
+        font-size: 0.73rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase; color: #b0bdd0;
     }
-    .tl-step-detail {
-        font-size: 0.82rem;
-        color: #64748b;
-    }
-    .tl-pipeline-connector {
-        display: flex;
-        align-items: center;
-        color: #334155;
-    }
-
+    .tl-step-detail { font-size: 0.81rem; color: #5e6e82; }
+    .tl-pipeline-connector { display: flex; align-items: center; color: #2a3548; }
     @media (max-width: 768px) {
-        .tl-pipeline-bar {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.85rem;
-            padding: 1rem;
-        }
-        .tl-pipeline-connector {
-            display: none;
-        }
+        .tl-pipeline-bar { flex-direction: column; align-items: flex-start; gap: 0.85rem; padding: 1rem; }
+        .tl-pipeline-connector { display: none; }
     }
 
-    /* Empty State */
+    /* ================================================================
+       12. EMPTY STATE
+       ================================================================ */
     .tl-empty-state {
-        background-color: #0e1420;
-        border: 1px solid #1a2233;
-        border-radius: 6px;
+        background-color: rgba(14,20,32,0.6);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 8px;
         padding: 2.25rem 1.5rem;
-        text-align: center;
-        width: 100%;
+        text-align: center; width: 100%;
     }
-    .tl-empty-icon {
-        margin-bottom: 0.65rem;
-        color: #475569;
-    }
-    .tl-empty-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: #cbd5e1;
-        margin-bottom: 0.25rem;
-    }
-    .tl-empty-desc {
-        font-size: 0.84rem;
-        color: #64748b;
-        max-width: 480px;
-        margin: 0 auto;
-        line-height: 1.45;
-    }
+    .tl-empty-icon { margin-bottom: 0.65rem; color: #3d4d63; }
+    .tl-empty-title { font-size: 0.93rem; font-weight: 600; color: #b0bdd0; margin-bottom: 0.25rem; }
+    .tl-empty-desc { font-size: 0.83rem; color: #5e6e82; max-width: 480px; margin: 0 auto; line-height: 1.45; }
 
-    /* Trust Report Styles */
+    /* ================================================================
+       13. TRUST REPORT — entrance animation
+       ================================================================ */
     .tl-report-wrapper {
-        margin-top: 0.25rem;
-        width: 100%;
+        margin-top: 0.25rem; width: 100%;
+        animation: tl-fadeUp 450ms ease both;
     }
     .tl-report-supertitle {
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #94a3b8;
-        margin-bottom: 0.65rem;
+        font-size: 0.73rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #7c8ba5; margin-bottom: 0.65rem;
     }
 
     /* Verdict Banner */
     .tl-verdict-banner {
-        background-color: #101622;
-        border: 1px solid #1a2233;
-        border-radius: 8px;
+        background-color: rgba(17,23,34,0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 10px;
         padding: 1.4rem 1.75rem;
-        margin-bottom: 1.15rem;
-        width: 100%;
+        margin-bottom: 1.15rem; width: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     }
     .tl-verdict-grid {
-        display: grid;
-        grid-template-columns: minmax(240px, 320px) 1fr;
-        gap: 2rem;
-        align-items: flex-start;
+        display: grid; grid-template-columns: minmax(240px, 320px) 1fr;
+        gap: 2rem; align-items: flex-start;
     }
-    .tl-verdict-left-col {
-        display: flex;
-        flex-direction: column;
-        gap: 0.4rem;
-    }
+    .tl-verdict-left-col { display: flex; flex-direction: column; gap: 0.4rem; }
     .tl-verdict-right-col {
-        border-left: 1px solid #1a2233;
-        padding-left: 2rem;
-        display: flex;
-        flex-direction: column;
+        border-left: 1px solid rgba(255,255,255,0.06);
+        padding-left: 2rem; display: flex; flex-direction: column;
     }
     .tl-micro-label {
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #94a3b8;
-        margin-bottom: 0.2rem;
+        font-size: 0.71rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #7c8ba5; margin-bottom: 0.2rem;
     }
     .tl-verdict-title {
-        font-size: 1.65rem;
-        font-weight: 700;
-        letter-spacing: -0.02em;
-        color: #f8fafc;
-        line-height: 1.2;
+        font-size: 1.55rem; font-weight: 700;
+        letter-spacing: -0.02em; color: #f1f5f9; line-height: 1.2;
     }
     .tl-verdict-risk-row {
-        display: flex;
-        align-items: center;
-        gap: 0.55rem;
-        margin-top: 0.2rem;
-        flex-wrap: wrap;
+        display: flex; align-items: center; gap: 0.55rem;
+        margin-top: 0.2rem; flex-wrap: wrap;
     }
     .tl-risk-pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.3rem 0.75rem;
-        border-radius: 4px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
+        display: inline-flex; align-items: center;
+        padding: 0.28rem 0.7rem; border-radius: 5px;
+        font-size: 0.77rem; font-weight: 700; letter-spacing: 0.04em;
     }
     .tl-score-pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.3rem 0.65rem;
-        border-radius: 4px;
-        font-size: 0.76rem;
-        font-weight: 600;
-        letter-spacing: 0.03em;
-        background-color: #0c1018;
-        border: 1px solid #1a2233;
-        color: #94a3b8;
+        display: inline-flex; align-items: center;
+        padding: 0.28rem 0.6rem; border-radius: 5px;
+        font-size: 0.75rem; font-weight: 600; letter-spacing: 0.03em;
+        background-color: rgba(8,11,18,0.6);
+        border: 1px solid rgba(255,255,255,0.06);
+        color: #7c8ba5;
         font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
     .tl-verdict-summary-text {
-        font-size: 0.94rem;
-        color: #cbd5e1;
-        line-height: 1.55;
-        margin-top: 0.25rem;
+        font-size: 0.92rem; color: #b0bdd0; line-height: 1.55; margin-top: 0.25rem;
     }
-
     @media (max-width: 768px) {
-        .tl-verdict-grid {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
+        .tl-verdict-grid { grid-template-columns: 1fr; gap: 1rem; }
         .tl-verdict-right-col {
-            border-left: none;
-            padding-left: 0;
-            border-top: 1px solid #1a2233;
-            padding-top: 0.85rem;
+            border-left: none; padding-left: 0;
+            border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.85rem;
         }
     }
 
-    /* Cards */
+    /* ================================================================
+       14. CARDS — layered surfaces
+       ================================================================ */
     .tl-card {
-        background-color: #101622;
-        border: 1px solid #1a2233;
-        border-radius: 6px;
+        background-color: rgba(17,23,34,0.75);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
         padding: 1.2rem 1.4rem;
-        height: 100%;
-        width: 100%;
+        height: 100%; width: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
     }
     .tl-card-header {
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #94a3b8;
-        margin-bottom: 0.65rem;
+        font-size: 0.73rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #7c8ba5; margin-bottom: 0.65rem;
     }
 
-    /* Bullets */
-    .tl-bullet-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+    /* ================================================================
+       15. BULLET LISTS
+       ================================================================ */
+    .tl-bullet-list { list-style: none; padding: 0; margin: 0; }
     .tl-bullet-item {
-        font-size: 0.90rem;
-        color: #cbd5e1;
-        line-height: 1.5;
-        padding: 0.35rem 0;
-        display: flex;
-        align-items: flex-start;
-        gap: 0.55rem;
+        font-size: 0.89rem; color: #b0bdd0; line-height: 1.5;
+        padding: 0.35rem 0; display: flex; align-items: flex-start; gap: 0.55rem;
     }
-    .tl-bullet-flag {
-        color: #ef4444;
-        font-weight: bold;
-    }
+    .tl-bullet-flag { color: #f87171; font-weight: bold; }
 
-    /* Diff Container (What Changed) */
+    /* ================================================================
+       16. DIFF / WHAT CHANGED
+       ================================================================ */
     .tl-diff-container {
-        background-color: #101622;
-        border: 1px solid #1a2233;
-        border-radius: 6px;
-        padding: 1.25rem 1.45rem;
-        margin-top: 1.15rem;
-        width: 100%;
+        background-color: rgba(17,23,34,0.75);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 8px;
+        padding: 1.25rem 1.45rem; margin-top: 1.15rem; width: 100%;
     }
-    .tl-diff-subtext {
-        font-size: 0.84rem;
-        color: #94a3b8;
-        margin-bottom: 0.75rem;
-    }
-    .tl-diff-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 0.65rem;
-    }
+    .tl-diff-subtext { font-size: 0.83rem; color: #7c8ba5; margin-bottom: 0.75rem; }
+    .tl-diff-grid { display: flex; flex-direction: column; gap: 0.65rem; }
     .tl-diff-card {
-        background-color: #0c1018;
-        border: 1px solid #1a2233;
-        border-radius: 4px;
-        padding: 0.85rem 1.1rem;
+        background-color: rgba(8,11,18,0.5);
+        border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 6px; padding: 0.85rem 1.1rem;
     }
-    .tl-diff-title {
-        font-size: 0.84rem;
-        font-weight: 600;
-        color: #e2e8f0;
-        margin-bottom: 0.4rem;
-    }
+    .tl-diff-title { font-size: 0.83rem; font-weight: 600; color: #cbd5e1; margin-bottom: 0.4rem; }
     .tl-diff-columns {
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        gap: 0.85rem;
-        font-size: 0.86rem;
+        display: grid; grid-template-columns: 1fr auto 1fr;
+        align-items: center; gap: 0.85rem; font-size: 0.85rem;
     }
-    .tl-diff-col-box {
-        padding: 0.5rem 0.75rem;
-        border-radius: 4px;
-        line-height: 1.4;
-    }
+    .tl-diff-col-box { padding: 0.5rem 0.75rem; border-radius: 5px; line-height: 1.4; }
     .tl-diff-orig {
-        background-color: #121824;
-        color: #94a3b8;
-        border: 1px solid #1e293b;
+        background-color: rgba(17,23,34,0.6);
+        color: #7c8ba5; border: 1px solid rgba(255,255,255,0.06);
     }
     .tl-diff-fwd {
-        background-color: rgba(245, 158, 11, 0.08);
-        color: #fef08a;
-        border: 1px solid rgba(245, 158, 11, 0.3);
+        background-color: rgba(245,158,11,0.07);
+        color: #fef08a; border: 1px solid rgba(245,158,11,0.25);
     }
     .tl-diff-highlight {
-        background-color: rgba(245, 158, 11, 0.25);
-        color: #fde047;
-        padding: 0.1rem 0.3rem;
-        border-radius: 3px;
-        font-weight: 600;
+        background-color: rgba(245,158,11,0.22);
+        color: #fde047; padding: 0.1rem 0.3rem;
+        border-radius: 3px; font-weight: 600;
     }
-    .tl-diff-arrow-icon {
-        color: #475569;
-        font-weight: bold;
-    }
-
+    .tl-diff-arrow-icon { color: #3d4d63; font-weight: bold; }
     @media (max-width: 768px) {
-        .tl-diff-columns {
-            grid-template-columns: 1fr;
-            gap: 0.4rem;
-        }
-        .tl-diff-arrow-icon {
-            display: none;
-        }
+        .tl-diff-columns { grid-template-columns: 1fr; gap: 0.4rem; }
+        .tl-diff-arrow-icon { display: none; }
     }
 
-    /* Recommended Next Action */
+    /* ================================================================
+       17. ACTION BOX (Next Action, Community Memory, etc.)
+       ================================================================ */
     .tl-action-box {
-        background-color: #0d1624;
-        border: 1px solid #1e3a5f;
-        border-left: 3px solid #3b82f6;
-        border-radius: 6px;
-        padding: 1.15rem 1.4rem;
-        margin-top: 1.15rem;
-        width: 100%;
+        background-color: rgba(13,22,36,0.75);
+        border: 1px solid rgba(30,58,95,0.5);
+        border-left: 3px solid #4F7CFF;
+        border-radius: 8px;
+        padding: 1.1rem 1.35rem;
+        margin-top: 1.15rem; width: 100%;
     }
     .tl-action-title {
-        font-size: 0.74rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: #60a5fa;
-        margin-bottom: 0.35rem;
+        font-size: 0.73rem; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: #6999ff; margin-bottom: 0.3rem;
     }
-    .tl-action-content {
-        font-size: 0.94rem;
-        color: #e2e8f0;
-        line-height: 1.5;
-    }
+    .tl-action-content { font-size: 0.92rem; color: #c1cbd9; line-height: 1.5; }
 
-    /* Secondary Action Button */
+    /* ================================================================
+       18. SECONDARY BUTTONS
+       ================================================================ */
     div.st-key-btn_verify_another > button {
         background-color: transparent !important;
-        border: 1px solid #222d42 !important;
-        color: #94a3b8 !important;
-        font-size: 0.86rem !important;
+        border: 1px solid rgba(255,255,255,0.08) !important;
+        color: #7c8ba5 !important;
+        font-size: 0.85rem !important;
         font-weight: 500 !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         padding: 0.5rem 1.2rem !important;
-        transition: all 0.15s ease !important;
+        transition: all 180ms ease !important;
     }
     div.st-key-btn_verify_another > button:hover {
-        background-color: #121824 !important;
-        border-color: #3b82f6 !important;
-        color: #f8fafc !important;
+        background-color: #111722 !important;
+        border-color: rgba(79,124,255,0.4) !important;
+        color: #e2e8f0 !important;
+        transform: translateY(-1px) !important;
     }
+
+    /* ================================================================
+       19. SCROLLBAR
+       ================================================================ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+
+    /* ================================================================
+       20. STREAMLIT WIDGET OVERRIDES — consistent with theme
+       ================================================================ */
+    .stExpander {
+        border: 1px solid rgba(255,255,255,0.06) !important;
+        border-radius: 8px !important;
+        background-color: rgba(17,23,34,0.5) !important;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 0;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .stTabs [data-baseweb="tab"] {
+        color: #7c8ba5;
+        transition: color 180ms ease;
+    }
+    .stTabs [aria-selected="true"] {
+        color: #4F7CFF !important;
+        border-bottom-color: #4F7CFF !important;
+    }
+
+    /* Streamlit status/spinner styling */
+    .stSpinner > div { color: #4F7CFF !important; }
+
+    /* Alert/warning boxes */
+    .stAlert { border-radius: 8px !important; }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -808,6 +831,7 @@ def normalize_backend_report(raw: dict) -> dict:
         "image_authenticity": raw.get("image_authenticity"),
         "identity_protection": raw.get("identity_protection") or raw.get("protect"),
         "protect": raw.get("protect") or raw.get("identity_protection"),
+        "community_memory": raw.get("community_memory"),
     }
 
 
@@ -1068,6 +1092,33 @@ def render_trust_report(report_data: dict):
         """,
         unsafe_allow_html=True,
     )
+
+    # Community Memory (Previously Checked)
+    comm_mem = report_data.get("community_memory")
+    if comm_mem and isinstance(comm_mem, dict) and comm_mem.get("previously_checked"):
+        prev_verdict = html.escape(str(comm_mem.get("previous_verdict", "N/A")))
+        prev_risk = html.escape(str(comm_mem.get("previous_risk_level", "N/A")))
+        check_count = comm_mem.get("count", 1)
+        first_seen = comm_mem.get("first_seen")
+        time_info = f" · First recorded: {html.escape(str(first_seen)[:19])}" if first_seen else ""
+
+        st.markdown(
+            f"""
+            <div class="tl-action-box" style="border-left-color: #3b82f6; background-color: #0b1324; border-color: #1e3a5f; margin-top: 0; margin-bottom: 1.15rem;">
+                <div class="tl-action-title" style="color: #60a5fa; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🛡️ COMMUNITY MEMORY</span>
+                    <span style="background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #93c5fd; padding: 1px 7px; border-radius: 4px; font-size: 0.72rem;">
+                        Previously Checked ({check_count}x)
+                    </span>
+                </div>
+                <div class="tl-action-content" style="color: #cbd5e1; font-size: 0.88rem;">
+                    This item was <strong>Previously Checked</strong> in TrustLens records ({check_count} total verification{'' if check_count == 1 else 's'}).<br/>
+                    Previous verdict: <strong style="color: #f8fafc;">{prev_verdict}</strong> ({prev_risk}){time_info}.
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     # Repository match notice if no baseline match was found in notice verification
     if report_data.get("matched_source") is None and report_data.get("has_matching_original") is False:
@@ -1387,16 +1438,30 @@ def render_public_verification():
     """Render the primary student / public verification view (No login required)."""
     render_hero()
 
-    st.markdown(
-        """
-        <div class="tl-workspace-card">
-            <div class="tl-workspace-header">
+    st.markdown('<div class="tl-workspace-card">', unsafe_allow_html=True)
+    col_wh_left, col_wh_right = st.columns([3, 1])
+    with col_wh_left:
+        st.markdown(
+            """
+            <div class="tl-workspace-header" style="margin-bottom: 0.5rem;">
                 <div class="tl-workspace-title">Verify content</div>
                 <div class="tl-workspace-desc">Choose what you want to check.</div>
             </div>
-        """,
-        unsafe_allow_html=True,
-    )
+            """,
+            unsafe_allow_html=True,
+        )
+    with col_wh_right:
+        lang_options = ["English", "Kannada", "Hindi", "Hinglish"]
+        cur_lang = st.session_state.get("selected_language", "English")
+        cur_idx = lang_options.index(cur_lang) if cur_lang in lang_options else 0
+        selected_lang = st.selectbox(
+            "Language",
+            lang_options,
+            index=cur_idx,
+            key="language_selector",
+            help="Select the language for analysis response",
+        )
+        st.session_state["selected_language"] = selected_lang
 
     # Mode Selector Buttons: 5 balanced modes
     col_msg, col_url, col_notice, col_image, col_email = st.columns(5)
@@ -1494,7 +1559,7 @@ def render_public_verification():
             key="msg_input_area",
             label_visibility="collapsed",
         )
-        action_btn_text = "Analyze Message ➔"
+        action_btn_text = "Analyze with TrustLens \u2192"
 
     elif current_mode == "URL":
         st.markdown(
@@ -1512,7 +1577,7 @@ def render_public_verification():
             key="url_input_field",
             label_visibility="collapsed",
         )
-        action_btn_text = "Inspect URL ➔"
+        action_btn_text = "Inspect with TrustLens \u2192"
 
     elif current_mode == "Notice":
         st.markdown(
@@ -1544,7 +1609,7 @@ def render_public_verification():
                 key="notice_fwd_text",
                 label_visibility="collapsed",
             )
-        action_btn_text = "Verify Notice ➔"
+        action_btn_text = "Verify with TrustLens \u2192"
 
     elif current_mode == "Image":
         st.markdown(
@@ -1566,7 +1631,7 @@ def render_public_verification():
             st.caption(
                 "TrustLens will send this image to Gemini Vision and assess for visual manipulation, suspicious edits, unusual text rendering, pasted regions, or AI-generation indicators."
             )
-        action_btn_text = "Check Image ➔"
+        action_btn_text = "Analyze with TrustLens \u2192"
 
     elif current_mode == "Email Screenshot":
         st.markdown(
@@ -1598,7 +1663,7 @@ def render_public_verification():
                 key="email_text_input",
                 label_visibility="collapsed",
             )
-        action_btn_text = "Analyze Email ➔"
+        action_btn_text = "Analyze with TrustLens \u2192"
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -1642,13 +1707,14 @@ def render_public_verification():
 
         if is_valid:
             try:
+                lang = st.session_state.get("selected_language", "English")
                 if current_mode == "Message":
                     with st.spinner("Analyzing message with local signals and Gemini..."):
-                        raw_report = analyze_text(user_input.strip())
+                        raw_report = analyze_text(user_input.strip(), language=lang)
 
                 elif current_mode == "URL":
                     with st.spinner("Inspecting URL structure, domain signals and threat patterns..."):
-                        raw_report = analyze_url(user_input.strip())
+                        raw_report = analyze_url(user_input.strip(), language=lang)
 
                 elif current_mode == "Notice":
                     fwd_bytes = None
@@ -1679,6 +1745,7 @@ def render_public_verification():
                         raw_report = analyze_image(
                             image_bytes=img_bytes,
                             mime_type=img_mime,
+                            language=lang,
                         )
 
                 elif current_mode == "Email Screenshot":
@@ -1693,6 +1760,7 @@ def render_public_verification():
                             image_bytes=em_bytes,
                             mime_type=em_mime,
                             content=email_pasted_text.strip() if email_pasted_text else None,
+                            language=lang,
                         )
 
                 st.session_state["report_data"] = normalize_backend_report(raw_report)
@@ -1929,6 +1997,8 @@ def main():
         st.session_state["org_logged_in"] = False
     if "selected_mode" not in st.session_state:
         st.session_state["selected_mode"] = "Message"
+    if "selected_language" not in st.session_state:
+        st.session_state["selected_language"] = "English"
     if "has_analyzed" not in st.session_state:
         st.session_state["has_analyzed"] = False
         st.session_state["report_data"] = None

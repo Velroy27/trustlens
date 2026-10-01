@@ -64,10 +64,11 @@ def generate_qr_receipt(
     }
 
     # Generate QR code (encodes only the verification URL)
-    import qrcode  # type: ignore
-    from qrcode.image.pure import PyPNGImage  # type: ignore
-
+    qr_bytes = b""
     try:
+        import qrcode  # type: ignore
+        from qrcode.image.pure import PyPNGImage  # type: ignore
+
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_M,

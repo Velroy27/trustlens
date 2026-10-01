@@ -40,9 +40,14 @@ def initialize_database() -> None:
                 CREATE TABLE IF NOT EXISTS analyses (
                     fingerprint TEXT PRIMARY KEY,
                     result JSON NOT NULL,
-                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+                    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    check_count INTEGER DEFAULT 1
                 )
             ''')
+            try:
+                cursor.execute('ALTER TABLE analyses ADD COLUMN check_count INTEGER DEFAULT 1')
+            except sqlite3.OperationalError:
+                pass
             # Official source-of-truth notices table
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS official_notices (
@@ -269,15 +274,18 @@ def find_matching_notice(candidate_text: str, min_similarity: float = 0.35) -> O
 def save_analysis(fingerprint: str, result: dict) -> bool:
     """
     Saves an analysis result associated with a fingerprint.
-    Prevents duplicate entries by using INSERT OR IGNORE.
+    Prevents duplicate entries by using INSERT OR IGNORE, keeping track of count.
     """
     try:
         with _get_connection() as conn:
             cursor = conn.cursor()
             result_json = json.dumps(result)
             cursor.execute('''
-                INSERT OR IGNORE INTO analyses (fingerprint, result)
-                VALUES (?, ?)
+                INSERT INTO analyses (fingerprint, result, check_count)
+                VALUES (?, ?, 1)
+                ON CONFLICT(fingerprint) DO UPDATE SET
+                    check_count = COALESCE(check_count, 1) + 1,
+                    timestamp = CURRENT_TIMESTAMP
             ''', (fingerprint, result_json))
             conn.commit()
             return True
@@ -296,11 +304,12 @@ def get_analysis(fingerprint: str) -> Optional[dict]:
     try:
         with _get_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute('SELECT result, timestamp FROM analyses WHERE fingerprint = ?', (fingerprint,))
+            cursor.execute('SELECT result, timestamp, check_count FROM analyses WHERE fingerprint = ?', (fingerprint,))
             row = cursor.fetchone()
             if row:
                 data = json.loads(row[0])
                 data['stored_at'] = row[1]
+                data['check_count'] = row[2] if len(row) > 2 and row[2] is not None else 1
                 return data
             return None
     except sqlite3.Error as e:
@@ -308,6 +317,53 @@ def get_analysis(fingerprint: str) -> Optional[dict]:
         return None
     except json.JSONDecodeError as e:
         print(f"Error parsing retrieved JSON: {e}")
+        return None
+
+
+def increment_analysis_count(fingerprint: str) -> int:
+    """Increments the check count for a previously checked analysis and returns new count."""
+    try:
+        with _get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE analyses SET check_count = COALESCE(check_count, 1) + 1 WHERE fingerprint = ?', (fingerprint,))
+            conn.commit()
+            cursor.execute('SELECT check_count FROM analyses WHERE fingerprint = ?', (fingerprint,))
+            row = cursor.fetchone()
+            return row[0] if row and row[0] is not None else 2
+    except sqlite3.Error:
+        return 2
+
+
+def get_community_memory(fingerprint: str) -> Optional[Dict[str, Any]]:
+    """
+    Checks if a matching previous analysis exists in the database for the given fingerprint.
+    Returns: {
+        'previously_checked': True,
+        'count': count,
+        'first_seen': timestamp,
+        'previous_verdict': verdict,
+        'previous_risk_level': risk_level,
+    } or None if never checked before.
+    """
+    if not fingerprint:
+        return None
+    try:
+        with _get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT result, timestamp, check_count FROM analyses WHERE fingerprint = ?', (fingerprint,))
+            row = cursor.fetchone()
+            if row:
+                res = json.loads(row[0])
+                count = row[2] if len(row) > 2 and row[2] is not None else 1
+                return {
+                    "previously_checked": True,
+                    "count": count,
+                    "first_seen": row[1],
+                    "previous_verdict": res.get("verdict", "UNKNOWN"),
+                    "previous_risk_level": res.get("risk_level", "UNKNOWN"),
+                }
+            return None
+    except Exception:
         return None
 
 

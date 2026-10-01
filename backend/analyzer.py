@@ -9,6 +9,8 @@ from .fingerprint import generate_fingerprint
 from .database import (
     save_analysis,
     get_analysis,
+    increment_analysis_count,
+    get_community_memory,
     initialize_database,
     find_matching_notice,
     get_all_official_notices,
@@ -50,7 +52,7 @@ def _build_standard_report(
     }
 
 
-def analyze_text(content: str) -> Dict[str, Any]:
+def analyze_text(content: str, language: str = "English") -> Dict[str, Any]:
     """
     Analyzes arbitrary text content using Gemini.
     Also executes identity attack security evaluation (PROTECT capability).
@@ -72,10 +74,19 @@ def analyze_text(content: str) -> Dict[str, Any]:
     fp = generate_fingerprint(content)
     existing = get_analysis(fp)
     if existing and 'verdict' in existing:
-        return existing
+        new_count = increment_analysis_count(fp)
+        existing["community_memory"] = {
+            "previously_checked": True,
+            "count": new_count,
+            "first_seen": existing.get("stored_at") or existing.get("timestamp"),
+            "previous_verdict": existing.get("verdict"),
+            "previous_risk_level": existing.get("risk_level"),
+        }
+        if not language or language.strip().lower() == "english":
+            return existing
 
     # Analyze via Gemini
-    gemini_result = analyze_with_gemini(content)
+    gemini_result = analyze_with_gemini(content, language=language)
 
     report = _build_standard_report(
         verdict=gemini_result.get("verdict", "UNKNOWN"),
@@ -98,12 +109,17 @@ def analyze_text(content: str) -> Dict[str, Any]:
     vid = generate_verification_id()
     report["verification_id"] = vid
 
+    # Check if this item had previous community memory
+    comm_mem = get_community_memory(fp)
+    if comm_mem:
+        report["community_memory"] = comm_mem
+
     save_analysis(fp, report)
     save_verification_report(vid, report, fingerprint=fp)
     return report
 
 
-def analyze_url(url: str) -> Dict[str, Any]:
+def analyze_url(url: str, language: str = "English") -> Dict[str, Any]:
     """
     Analyzes a URL using local heuristics.
     """
@@ -123,6 +139,14 @@ def analyze_url(url: str) -> Dict[str, Any]:
     fp = generate_fingerprint(url)
     existing = get_analysis(fp)
     if existing and 'verdict' in existing:
+        new_count = increment_analysis_count(fp)
+        existing["community_memory"] = {
+            "previously_checked": True,
+            "count": new_count,
+            "first_seen": existing.get("stored_at") or existing.get("timestamp"),
+            "previous_verdict": existing.get("verdict"),
+            "previous_risk_level": existing.get("risk_level"),
+        }
         return existing
 
     url_res = check_url(url)
@@ -149,6 +173,10 @@ def analyze_url(url: str) -> Dict[str, Any]:
 
     vid = generate_verification_id()
     report["verification_id"] = vid
+
+    comm_mem = get_community_memory(fp)
+    if comm_mem:
+        report["community_memory"] = comm_mem
 
     save_analysis(fp, report)
     save_verification_report(vid, report, fingerprint=fp)
@@ -290,6 +318,14 @@ def analyze_notice(
 
     existing = get_analysis(fp)
     if existing and "verdict" in existing:
+        new_count = increment_analysis_count(fp)
+        existing["community_memory"] = {
+            "previously_checked": True,
+            "count": new_count,
+            "first_seen": existing.get("stored_at") or existing.get("timestamp"),
+            "previous_verdict": existing.get("verdict"),
+            "previous_risk_level": existing.get("risk_level"),
+        }
         # Inject live authenticity result on cache hits (may be stale otherwise)
         if image_authenticity and "image_authenticity" not in existing:
             existing["image_authenticity"] = image_authenticity
@@ -441,6 +477,7 @@ def analyze_email(
     image_bytes: Optional[bytes] = None,
     mime_type: str = "image/png",
     content: Optional[str] = None,
+    language: str = "English",
 ) -> Dict[str, Any]:
     """
     Analyzes an email screenshot or email text for phishing, spoofing, impersonation,
@@ -475,7 +512,16 @@ def analyze_email(
     fp = generate_fingerprint(fp_source)
     existing = get_analysis(fp)
     if existing and "verdict" in existing:
-        return existing
+        new_count = increment_analysis_count(fp)
+        existing["community_memory"] = {
+            "previously_checked": True,
+            "count": new_count,
+            "first_seen": existing.get("stored_at") or existing.get("timestamp"),
+            "previous_verdict": existing.get("verdict"),
+            "previous_risk_level": existing.get("risk_level"),
+        }
+        if not language or language.strip().lower() == "english":
+            return existing
 
     # 1. Assess image authenticity if image provided
     image_authenticity = None
@@ -490,6 +536,7 @@ def analyze_email(
         image_bytes=image_bytes,
         mime_type=mime_type,
         email_text=content,
+        language=language,
     )
 
     verdict = gemini_res.get("verdict", "SUSPICIOUS")
@@ -574,6 +621,10 @@ def analyze_email(
     except Exception:
         pass
 
+    comm_mem = get_community_memory(fp)
+    if comm_mem:
+        report["community_memory"] = comm_mem
+
     vid = generate_verification_id()
     report["verification_id"] = vid
 
@@ -585,6 +636,7 @@ def analyze_email(
 def analyze_image(
     image_bytes: bytes,
     mime_type: str = "image/png",
+    language: str = "English",
 ) -> Dict[str, Any]:
     """
     Analyzes a general image or screenshot for visual manipulation, AI generation,
@@ -617,6 +669,14 @@ def analyze_image(
     fp = generate_fingerprint(fp_source)
     existing = get_analysis(fp)
     if existing and "verdict" in existing:
+        new_count = increment_analysis_count(fp)
+        existing["community_memory"] = {
+            "previously_checked": True,
+            "count": new_count,
+            "first_seen": existing.get("stored_at") or existing.get("timestamp"),
+            "previous_verdict": existing.get("verdict"),
+            "previous_risk_level": existing.get("risk_level"),
+        }
         return existing
 
     # Run Gemini Vision authenticity check
@@ -697,6 +757,10 @@ def analyze_image(
 
     if image_authenticity:
         report["image_authenticity"] = image_authenticity
+
+    comm_mem = get_community_memory(fp)
+    if comm_mem:
+        report["community_memory"] = comm_mem
 
     vid = generate_verification_id()
     report["verification_id"] = vid

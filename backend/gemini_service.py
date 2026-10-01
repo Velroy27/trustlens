@@ -158,12 +158,13 @@ def _parse_gemini_response(response_text: str) -> Dict[str, Any]:
     }
 
 
-def analyze_with_gemini(content: str) -> Dict[str, Any]:
+def analyze_with_gemini(content: str, language: str = "English") -> Dict[str, Any]:
     """
     Analyzes content using the Gemini API to determine authenticity and security risk.
 
     Args:
         content (str): The text or message content to analyze.
+        language (str): Target response language (English, Kannada, Hindi, Hinglish).
 
     Returns:
         dict: Standardized analysis dictionary containing:
@@ -193,6 +194,13 @@ def analyze_with_gemini(content: str) -> Dict[str, Any]:
         temperature=0.2,
     )
     prompt = ANALYSIS_PROMPT.format(content=content.strip())
+    if language and language.strip().lower() != "english":
+        lang_str = language.strip()
+        prompt += (
+            f"\n\nIMPORTANT LANGUAGE REQUIREMENT:\n"
+            f"Please respond and write 'summary', 'red_flags', 'evidence', and 'next_action' in {lang_str}.\n"
+            f"Keep the JSON keys and English values for 'verdict' ('SAFE', 'SUSPICIOUS', 'MALICIOUS') and 'risk_level' ('LOW', 'MEDIUM', 'HIGH') strictly in English."
+        )
 
     # Try primary requested model, then resilient fallbacks if temporary high demand occurs
     candidate_models = [PRIMARY_MODEL] + [m for m in FALLBACK_MODELS if m != PRIMARY_MODEL]
@@ -799,6 +807,7 @@ def analyze_email_with_gemini(
     image_bytes: Optional[bytes] = None,
     mime_type: str = "image/png",
     email_text: Optional[str] = None,
+    language: str = "English",
 ) -> Dict[str, Any]:
     """
     Analyzes an email screenshot or email text using Gemini Vision / language reasoning.
@@ -809,6 +818,7 @@ def analyze_email_with_gemini(
         image_bytes: Raw bytes of the email screenshot (optional if email_text provided).
         mime_type: Image MIME type.
         email_text: Plain text of the email (optional if image_bytes provided).
+        language: Language for the analysis report (English, Kannada, Hindi, Hinglish).
 
     Returns:
         dict: Standardized email evaluation report.
@@ -843,6 +853,13 @@ def analyze_email_with_gemini(
     prompt_content = EMAIL_ANALYSIS_PROMPT
     if email_text:
         prompt_content += f'\n\nEmail Text:\n"""\n{email_text.strip()}\n"""'
+    if language and language.strip().lower() != "english":
+        lang_str = language.strip()
+        prompt_content += (
+            f"\n\nIMPORTANT LANGUAGE REQUIREMENT:\n"
+            f"Please respond and write 'summary', 'red_flags', 'evidence', and 'next_action' in {lang_str}.\n"
+            f"Keep the JSON keys and English values for 'verdict' and 'risk_level' strictly in English."
+        )
     contents.append(prompt_content)
 
     config = types.GenerateContentConfig(
